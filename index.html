@@ -33,8 +33,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-wand-magic-sparkles text-indigo-600 text-xl"></i>
-                <span class="text-lg font-bold text-slate-900 tracking-tight">AI 提示词工具箱</span>
-                <span class="inline-flex items-center rounded-md bg-slate-50 px-2 py-0.5 text-xs font-medium text-slate-500 ring-1 ring-inset ring-slate-500/10">只读版</span>
+                <span class="text-lg font-bold text-slate-900 tracking-tight">AI 提示词工具箱byWeiJing</span>
+                <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10">只读版</span>
             </div>
         </div>
     </header>
@@ -42,7 +42,7 @@
     <!-- 主体内容 -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full flex flex-col md:flex-row items-start gap-6">
         
-        <!-- 左侧分类与搜索 (已合并为统一样式的 sticky 卡片) -->
+        <!-- 左侧分类与搜索 (已通过增加“使用小贴士”板块来填充下方空白) -->
         <aside class="w-full md:w-64 flex-shrink-0 md:sticky md:top-24 self-start">
             <div class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-5 space-y-5">
                 
@@ -66,6 +66,30 @@
                     <div id="categoryList" class="space-y-1">
                         <!-- 分类按钮由 JS 动态生成 -->
                     </div>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <!-- 新增：使用小贴士 (用于填充多余空白，提供操作指引) -->
+                <div class="space-y-2.5">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <i class="fa-regular fa-lightbulb text-amber-500 text-xs animate-pulse"></i>
+                        使用小贴士
+                    </h3>
+                    <ul class="text-xs text-slate-500 space-y-2 leading-relaxed">
+                        <li class="flex items-start gap-1.5">
+                            <span class="text-indigo-500 mt-0.5">•</span>
+                            <span>点击 <strong class="text-slate-700">“复制提示词”</strong> 即可一键保存至剪贴板，直接粘贴到 AI 聊天框中使用。</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <span class="text-indigo-500 mt-0.5">•</span>
+                            <span>提示词中带有 <strong class="text-slate-700">[括号]</strong> 的占位符（如 <code class="bg-slate-100 text-slate-600 px-1 py-0.5 rounded font-mono text-[10px]">[论文摘要]</code>），请替换为您自己的内容。</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <span class="text-indigo-500 mt-0.5">•</span>
+                            <span>建议配合支持长上下文的 AI 模型（如 Claude 3.5, GPT-4 等）以获得最佳的分析与润色效果。</span>
+                        </li>
+                    </ul>
                 </div>
                 
             </div>
@@ -121,7 +145,7 @@
                 id: 5,
                 title: "Q5. 引言部分深度解读",
                 category: "文献精读",
-                prompt: "请详细解读论文的 引言部分，并回答以下问题：\n1. 这篇论文 试图解决什么问题？\n2. 论文 背景 是什么？作者是如何 铺垫 这个研究问题的？\n3. 引言部分 明确提出的研究问题 是什么？\n4. 作者在引言中 简要概括了论文的主要贡献 吗？如果是，请提取出来。"
+                prompt: "请详细解读论文的 引言部分，并回答以下问题：\n1. 这篇论文 试图解决什么问题？\n2. 论文 背景 是什么？作者是如何 铺垫 这个研究问题的？\n3. 引言部分 明确提出的研究问题 是强些什么？\n4. 作者在引言中 简要概括了论文的主要贡献 吗？如果是，请提取出来。"
             },
             {
                 id: 6,
@@ -255,7 +279,7 @@
                 id: 27,
                 title: "中转英 (学术翻译)",
                 category: "翻译",
-                prompt: `# Role\n你是一位兼具顶尖科研写作专家与资深会议审稿人（ICML/ICLR 等）双重身份的助手。你的学术品味极高，对逻辑漏洞和语言瑕疵零容忍。\n\n# Task\n请处理我提供的【中文草稿】，将其翻译并润色为【英文学术论文片段】。\n\n# Constraints\n1. 视觉与排版：\n   - 尽量不要使用加粗、斜体或引号，这会影响论文观感。\n   - 保持 LaTeX 源码的纯净，不要添加无意义的格式修饰。\n\n2. 风格与逻辑：\n   - 要求逻辑严谨，用词准确，表达凝练连贯，尽量使用常见的单词，避免生僻词。\n   - 尽量不要使用破折号（—），推荐使用从句或同位语替代。\n   - 拒绝使用\\item列表，必须使用连贯的段落表达。\n   - 去除“AI味”，行文自然流畅，避免机械的连接词堆堆砌。\n\n3. 时态规范：\n   - 统一使用一般现在时描述方法、架构和实验结论。\n   - 仅在明确提及特定历史事件时使用过去时。\n\n4. 输出格式：\n   - Part 1 [LaTeX]：只输出翻译成英文后的内容本身（LaTeX 格式）。\n     * 语言要求：必须是全英文。\n     * 特别注意：必须对特殊字符进行转义（例如：将 \`95%\` 转义为 \`95\\%\`，\`model_v1\` 转义为 \`model\\_v1\`，\`R&D\` 转义为 \`R\\&D\`）。\n     * 保持数学公式原样（保留 \$ 符号）。\n   - Part 2 [Translation]：对应的中文直译（用于核对逻辑是否符合原意）。\n   - 除以上两部分外，不要输出任何多余的对话或解释。\n\n# Execution Protocol\n在输出最终结果前，请务必在后台进行自我审查：\n1. 审稿人视角：假设你是最挑剔的 Reviewer，检查是否存在过度排版、逻辑跳跃或未翻译的中文。\n2. 立即纠正：针对发现的问题进行修改，确保最终输出的内容严谨、纯净且完全英文化。\n\n# Input\n[在此处粘贴你的中文草稿]`
+                prompt: `# Role\n你是一位兼具顶尖科研写作专家与资深会议审稿人（ICML/ICLR 等）双重身份的助手。你的学术品味极高，对逻辑漏洞和语言瑕疵零容忍。\n\n# Task\n请处理我提供的【中文草稿】，将其翻译并润色为【英文学术论文片段】。\n\n# Constraints\n1. 视觉与排版：\n   - 尽量不要使用加粗、斜体或引号，这会影响论文观感。\n   - 保持 LaTeX 源码的纯净，不要添加无意义的格式修饰。\n\n2. 风格与逻辑：\n   - 要求逻辑严谨，用词准确，表达凝练连贯，尽量使用常见的单词，避免生僻词。\n   - 尽量不要使用破折号（—），推荐使用从句或同位语替代。\n   - 拒绝使用\\item列表，必须使用连贯的段落表达。\n   - 去除“AI味”，行文自然流畅，避免机械的连接词堆砌。\n\n3. 时态规范：\n   - 统一使用一般现在时描述方法、架构和实验结论。\n   - 仅在明确提及特定历史事件时使用过去时。\n\n4. 输出格式：\n   - Part 1 [LaTeX]：只输出翻译成英文后的内容本身（LaTeX 格式）。\n     * 语言要求：必须是全英文。\n     * 特别注意：必须对特殊字符进行转义（例如：将 \`95%\` 转义为 \`95\\%\`，\`model_v1\` 转义为 \`model\\_v1\`，\`R&D\` 转义为 \`R\\&D\`）。\n     * 保持数学公式原样（保留 \$ 符号）。\n   - Part 2 [Translation]：对应的中文直译（用于核对逻辑是否符合原意）。\n   - 除以上两部分外，不要输出任何多余的对话或解释。\n\n# Execution Protocol\n在输出最终结果前，请务必在后台进行自我审查：\n1. 审稿人视角：假设你是最挑剔的 Reviewer，检查是否存在过度排版、逻辑跳跃或未翻译的中文。\n2. 立即纠正：针对发现的问题进行修改，确保最终输出的内容严谨、纯净且完全英文化。\n\n# Input\n[在此处粘贴你的中文草稿]`
             },
             {
                 id: 28,
@@ -325,7 +349,7 @@
                 id: 38,
                 title: "科研绘图设计",
                 category: "写作",
-                prompt: `你是一名经验丰富的科研绘图设计师，请仔细阅读我提供的文献信息，充分理解研究内容，生成可用于 科研发发表的配图的英文提示词。\n风格：BioRender风格（风格可写对应专业或用途常用的工具。例如，生物医学领域可写biorender风格）\n\n请分析文献信息并提供绘图提示词。`
+                prompt: `度你是一名经验丰富的科研绘图设计师，请仔细阅读我提供的文献信息，充分理解研究内容，生成可用于 科研发发表的配图的英文提示词。\n风格：BioRender风格（风格可写对应专业或用途常用的工具。例如，生物医学领域可写biorender风格）\n\n请分析文献信息并提供绘图提示词。`
             },
             {
                 id: 39,
@@ -337,7 +361,7 @@
                 id: 40,
                 title: "实验绘图推荐",
                 category: "写作",
-                prompt: `# Role\n你是一位就职于顶级科学期刊（如 Nature, Science）或计算机顶级会议（如 CVPR, NeurIPS）的资神数据可视化专家。你拥有极高的学术审美，严谨且专业。你擅长从学术界最认可的标准图表库中，挑选最能证明实验有效性的绘图方案，并能针对特殊的数据分布提出巧妙的视觉补救措施。\n\n# Task\n请分析我提供的实验数据或实验目的，推荐 1 到 2 种最佳绘图方案。\n\n# Constraints\n1. 来源优先：请优先从标准学术图表库中选择（如：分组柱状图、条形图、雷达图、带置信区折线图、PR曲线、热力图等）。\n2. 统计严谨：若数据包含多次实验结果或方差信息，强烈建议添加误差线或置信区间。\n3. 尺度适应性：若数据组间差异巨大，请合理给出断裂坐标轴、对数坐标或归一化建议。\n4. 视觉逻辑：根据标签长度选择横向或纵向柱状图；根据数据维度选择单轴或双轴。\n5. 语言风格：输出内容需保持学术、客观。\n\n# Output Format\n1. 推荐方案：图表名称\n2. 核心理由：结合数据逻辑，解释为什么这张图最符合当前的学术叙事需求。\n3. 视觉设计规范（坐标轴说明、尺度处理、统计要素、配色与样式建议）。\n\n# Input\n[在此处粘贴你的实验数据，并请简述你想通过这张图强调的核心结论]`
+                prompt: `# Role\n你是一位就职于顶级科学期刊（如 Nature, Science）或计算机顶级会议（如 CVPR, NeurIPS）的资神数据可视化专家。你拥有极高的学术审美，严谨且专业。你擅长从学术界最认可的标准图表库中，挑选最能证明实验有效性的绘图方案，并能针对特殊的数据分布提出巧妙的视觉视觉补救措施。\n\n# Task\n请分析我提供的实验数据或实验目的，推荐 1 到 2 种最佳绘图方案。\n\n# Constraints\n1. 来源优先：请优先从标准学术图表库中选择（如：分组柱状图、条形图、雷达图、带置信区折线图、PR曲线、热力图等）。\n2. 统计严谨：若数据包含多次实验结果或方差信息，强烈建议添加误差线或置信区间。\n3. 尺度适应性：若数据组间差异巨大，请合理给出断裂坐标轴、对数坐标或归一化建议。\n4. 视觉逻辑：根据标签长度选择横向或纵向柱状图；根据数据维度选择单轴或双轴。\n5. 语言风格：输出内容需保持学术、客观。\n\n# Output Format\n1. 推荐方案：图表名称\n2. 核心理由：结合数据逻辑，解释为什么这张图最符合当前的学术叙事需求。\n3. 视觉设计规范（坐标轴说明、尺度处理、统计要素、配色与样式建议）。\n\n# Input\n[在此处粘贴你的实验数据，并请简述你想通过这张图强调的核心结论]`
             },
             {
                 id: 41,
