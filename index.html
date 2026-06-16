@@ -8,6 +8,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 FontAwesome 图标库 (CDN) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 自定义滚动条样式，使其更契合系统界面 -->
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1; /* slate-300 */
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #94a3b8; /* slate-400 */
+        }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
@@ -164,7 +181,7 @@
                 id: 17,
                 title: "实验分析 (LaTeX)",
                 category: "写作",
-                prompt: `# Role\n你是一位具有敏锐洞察力的资深数据科学家，擅长处理复杂的实验数据并撰写高质量的学术分析报告。\n\n# Task\n请仔细阅读我提供的【实验数据】从中挖掘关键特征、趋势和对比结论，并将其整理为符合顶级会议标准的 LaTeX 分析段落。\n\n# Constraints\n1. 数据真实性：\n   - 所有结论必须严格基于输入的数据。严禁编造数据、夸大提升幅度或捏造不存在的实验现象。\n\n2. 分析深度：\n   - 拒绝简单的报账式描述，重点在于比较和趋势分析。\n\n3. 排版与格式规范：\n   - 严禁使用加粗或斜体（正文中不要使用 \\textbf 或 \\emph）。\n   - 结构强制：必须使用 \\paragraph{核心结论} + 分析文本 的形式。不同的结论点之间请空一行。\n\n4. 输出格式：\n   - Part 1 [LaTeX]：只输出分析后的 LaTeX 代码。\n   - Part 2 [Translation]：对应的中文直译（用于核对数据结论是否准确）。\n   - 除以上两部分外，不要输出任何多余的对话。\n\n# Input\n[在此处粘贴你的 Excel 数据或实验结果文本]`
+                prompt: `# Role\n你是一位具有敏锐洞察力的资深数据科学家，擅长处理复杂的实验数据并撰写高质量的学术分析报告。\n\n# Task\n请仔细阅读我提供的【实验数据】从中挖掘关键特征、趋势和对比结论，并将其整理为符合顶级会议标准的 LaTeX 分析段落。\n\n# Constraints\n1. 数据真实性：\n   - 所有结论必须严格基于输入的数据。严禁编造数据、夸大提升幅度或捏造不存在的实验现象。\n\n2. 批改深度：\n   - 拒绝简单的报账式描述，重点在于比较和趋势分析。\n\n3. 排版与格式规范：\n   - 严禁使用加粗或斜体（正文中不要使用 \\textbf 或 \\emph）。\n   - 结构强制：必须使用 \\paragraph{核心结论} + 分析文本 的形式。不同的结论点之间请空一行。\n\n4. 输出格式：\n   - Part 1 [LaTeX]：只输出分析后的 LaTeX 代码。\n   - Part 2 [Translation]：对应的中文直译（用于核对数据结论是否准确）。\n   - 除以上两部分外，不要输出任何多余的对话。\n\n# Input\n[在此处粘贴你的 Excel 数据或实验结果文本]`
             },
             {
                 id: 18,
@@ -245,7 +262,8 @@
                             <span class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-2 py-1 rounded-md">${p.category}</span>
                         </div>
                         <h4 class="font-bold text-slate-900 text-base mb-2">${p.title}</h4>
-                        <p class="text-slate-600 text-sm whitespace-pre-wrap break-words line-clamp-6 bg-slate-50 p-3 rounded-lg border border-slate-100 font-mono mb-4">${escapeHtml(p.prompt)}</p>
+                        <!-- 修改此处：移除 line-clamp-6，使用 h-52 overflow-y-auto 与自定义滚动条样式 -->
+                        <div class="text-slate-600 text-sm whitespace-pre-wrap break-words h-52 overflow-y-auto bg-slate-50 p-3 rounded-lg border border-slate-100 font-mono mb-4 custom-scrollbar">${escapeHtml(p.prompt)}</div>
                     </div>
                     <button onclick="copyToClipboard(this, \`${escapeJsString(p.prompt)}\`)" class="w-full bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-700 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-1.5">
                         <i class="fa-regular fa-copy"></i> 复制提示词
