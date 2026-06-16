@@ -470,7 +470,7 @@
                         <h4 class="font-bold text-slate-800 text-base mb-2 group-hover:text-indigo-600 transition-colors">${p.title}</h4>
                         <div class="text-slate-600 text-sm whitespace-pre-wrap break-words h-52 overflow-y-auto bg-slate-50/80 p-3.5 rounded-lg border border-slate-100/80 font-mono mb-4 custom-scrollbar">${escapeHtml(p.prompt)}</div>
                     </div>
-                    <button onclick="copyToClipboard(this, \`${escapeJsString(p.prompt)}\`)" class="w-full bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-700 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-1.5">
+<button onclick="copyPromptById(${p.id}, this)" class="w-full bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-700 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-1.5">
                         <i class="fa-regular fa-copy text-xs"></i> 复制提示词
                     </button>
                 </div>
@@ -481,7 +481,13 @@
         function filterPrompts() {
             renderPrompts();
         }
-
+        // 通过 ID 复制提示词，彻底避免 HTML 属性引号冲突
+        function copyPromptById(id, button) {
+            const item = prompts.find(p => p.id === id);
+            if (item) {
+                copyToClipboard(button, item.prompt);
+            }
+        }
         // 复制到剪贴板功能
         function copyToClipboard(button, text) {
             navigator.clipboard.writeText(text).then(() => {
