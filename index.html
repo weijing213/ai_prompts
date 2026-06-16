@@ -18,18 +18,7 @@
                 <i class="fa-solid fa-wand-magic-sparkles text-indigo-600 text-2xl"></i>
                 <span class="text-xl font-bold text-slate-900">AI 提示词工具箱</span>
             </div>
-            <div class="flex items-center space-x-2">
-                <button onclick="openModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1">
-                    <i class="fa-solid fa-plus"></i> 添加提示词
-                </button>
-                <button onclick="exportJSON()" class="border border-slate-300 hover:bg-slate-100 text-slate-700 px-3 py-2 rounded-lg text-sm font-medium transition" title="导出备份">
-                    <i class="fa-solid fa-download"></i>
-                </button>
-                <label class="border border-slate-300 hover:bg-slate-100 text-slate-700 px-3 py-2 rounded-lg text-sm font-medium transition cursor-pointer" title="导入备份">
-                    <i class="fa-solid fa-upload"></i>
-                    <input type="file" id="importFile" accept=".json" class="hidden" onchange="importJSON(event)">
-                </label>
-            </div>
+            <!-- 只读版移除了顶部的添加、导入和导出按钮 -->
         </div>
     </header>
 
@@ -65,32 +54,6 @@
         </section>
     </main>
 
-    <!-- 添加/编辑 弹窗 -->
-    <div id="promptModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl relative animate-in fade-in zoom-in-95 duration-200">
-            <h3 id="modalTitle" class="text-lg font-bold text-slate-900 mb-4">添加提示词</h3>
-            <form id="promptForm" onsubmit="savePrompt(event)" class="space-y-4">
-                <input type="hidden" id="promptId">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">标题</label>
-                    <input type="text" id="promptTitle" required class="w-full border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">分类</label>
-                    <input type="text" id="promptCategory" required placeholder="例如：翻译、编程、写作" class="w-full border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">提示词内容</label>
-                    <textarea id="promptText" required rows="6" class="w-full border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono text-sm"></textarea>
-                </div>
-                <div class="flex justify-end space-x-2 pt-2">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-slate-300 rounded-lg text-sm text-slate-700 hover:bg-slate-50">取消</button>
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm">确定</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- 简易通知提示 -->
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-sm px-4 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
         <i class="fa-solid fa-circle-check text-emerald-400"></i>
@@ -99,8 +62,8 @@
 
     <!-- JavaScript 逻辑 -->
     <script>
-        // 已经整理分类的默认提示词列表
-        const defaultPrompts = [
+        // 只读版直接加载数据，完全弃用 LocalStorage 缓存
+        const prompts = [
             {
                 id: 1,
                 title: "中转英 (学术翻译)",
@@ -223,18 +186,12 @@
             }
         ];
 
-        let prompts = JSON.parse(localStorage.getItem('ai_prompts')) || defaultPrompts;
         let selectedCategory = '全部';
 
         // 初始化页面
         function init() {
             renderCategories();
             renderPrompts();
-        }
-
-        // 保存到本地存储
-        function persistData() {
-            localStorage.setItem('ai_prompts', JSON.stringify(prompts));
         }
 
         // 渲染分类列表
@@ -262,7 +219,7 @@
             renderPrompts();
         }
 
-        // 渲染提示词卡片
+        // 渲染提示词卡片 (只读版无编辑/删除按钮)
         function renderPrompts() {
             const searchQuery = document.getElementById('searchInput').value.toLowerCase();
             const filtered = prompts.filter(p => {
@@ -286,14 +243,6 @@
                     <div>
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-2 py-1 rounded-md">${p.category}</span>
-                            <div class="opacity-0 group-hover:opacity-100 transition flex items-center space-x-1">
-                                <button onclick="editPrompt(${p.id})" class="p-1 text-slate-400 hover:text-slate-600 rounded" title="编辑">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </button>
-                                <button onclick="deletePrompt(${p.id})" class="p-1 text-slate-400 hover:text-rose-600 rounded" title="删除">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </button>
-                            </div>
                         </div>
                         <h4 class="font-bold text-slate-900 text-base mb-2">${p.title}</h4>
                         <p class="text-slate-600 text-sm whitespace-pre-wrap break-words line-clamp-6 bg-slate-50 p-3 rounded-lg border border-slate-100 font-mono mb-4">${escapeHtml(p.prompt)}</p>
@@ -330,125 +279,6 @@
             });
         }
 
-        // 弹窗控制
-        function openModal() {
-            document.getElementById('promptId').value = '';
-            document.getElementById('promptForm').reset();
-            document.getElementById('modalTitle').innerText = '添加提示词';
-            document.getElementById('promptModal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('promptModal').classList.add('hidden');
-        }
-
-        // 编辑提示词
-        function editPrompt(id) {
-            const prompt = prompts.find(p => p.id === id);
-            if (!prompt) return;
-
-            document.getElementById('promptId').value = prompt.id;
-            document.getElementById('promptTitle').value = prompt.title;
-            document.getElementById('promptCategory').value = prompt.category;
-            document.getElementById('promptText').value = prompt.prompt;
-
-            document.getElementById('modalTitle').innerText = '编辑提示词';
-            document.getElementById('promptModal').classList.remove('hidden');
-        }
-
-        // 新增或更新提示词
-        function savePrompt(event) {
-            event.preventDefault();
-            const idVal = document.getElementById('promptId').value;
-            const title = document.getElementById('promptTitle').value.trim();
-            const category = document.getElementById('promptCategory').value.trim();
-            const promptText = document.getElementById('promptText').value.trim();
-
-            if (idVal) {
-                // 编辑现有
-                const index = prompts.findIndex(p => p.id == idVal);
-                if (index !== -1) {
-                    prompts[index] = { id: parseInt(idVal), title, category, prompt: promptText };
-                    showToast("更新成功");
-                }
-            } else {
-                // 新增
-                const newId = prompts.length > 0 ? Math.max(...prompts.map(p => p.id)) + 1 : 1;
-                prompts.push({ id: newId, title, category, prompt: promptText });
-                showToast("添加成功");
-            }
-
-            persistData();
-            closeModal();
-            renderCategories();
-            renderPrompts();
-        }
-
-        // 删除提示词
-        function deletePrompt(id) {
-            if (confirm("确定要删除这个提示词吗？")) {
-                prompts = prompts.filter(p => p.id !== id);
-                persistData();
-                showToast("删除成功");
-                renderCategories();
-                // 如果当前分类已被删空，切回全部
-                if (selectedCategory !== '全部' && !prompts.some(p => p.category === selectedCategory)) {
-                    selectedCategory = '全部';
-                }
-                renderCategories();
-                renderPrompts();
-            }
-        }
-
-        // 导出 JSON
-        function exportJSON() {
-            const dataStr = JSON.stringify(prompts, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `ai_prompts_backup_${new Date().toISOString().slice(0, 10)}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
-            showToast("配置已导出为 JSON 文件");
-        }
-
-        // 导入 JSON
-        function importJSON(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if (Array.isArray(imported)) {
-                        // 简单格式校验
-                        const isValid = imported.every(item => item.title && item.category && item.prompt);
-                        if (isValid) {
-                            prompts = imported.map((item, idx) => ({
-                                id: item.id || idx + 1,
-                                title: item.title,
-                                category: item.category,
-                                prompt: item.prompt
-                            }));
-                            persistData();
-                            init();
-                            showToast("数据成功导入并已更新");
-                        } else {
-                            showToast("格式不合规，确保含有 title, category, prompt 字段", true);
-                        }
-                    } else {
-                        showToast("导入格式错误：应为 JSON 数组", true);
-                    }
-                } catch (err) {
-                    showToast("解析文件失败，请确保文件是合法的 JSON 格式", true);
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = ''; // 清理 input 的值
-        }
-
         // 显示 Toast 提示
         function showToast(message, isError = false) {
             const toast = document.getElementById('toast');
@@ -470,7 +300,7 @@
             }, 2500);
         }
 
-        // 工具函数：转义 HTML 实体防止页面破坏
+        // 工具函数：转义 HTML 实体
         function escapeHtml(str) {
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
