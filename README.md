@@ -7,7 +7,7 @@
 [![GitHub Forks](https://img.shields.io/github/forks/weijing213/ai_prompts?style=social)](https://github.com/weijing213/ai_prompts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**🔗 [在线体验](https://weijing213.github.io/ai_prompts/) | [提交需求](https://github.com/weijing213/ai_prompts/issues)**
+**🔗 [网页链接](https://weijing213.github.io/ai_prompts/) | [提交需求](https://github.com/weijing213/ai_prompts/issues)**
 
 </div>
 
